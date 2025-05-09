@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Max Get Home!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Comic Neue', cursive;
+            background: linear-gradient(to bottom, #87ceeb, #e0f7fa);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .game-container {
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        header h1 {
+            color: #ff5722;
+            font-size: 32px;
+            margin: 0;
+        }
+
+        header p {
+            color: #555;
+            font-size: 18px;
+            margin: 5px 0 20px;
+        }
+
+        .progress-bar {
+            margin: 15px 0;
+            font-size: 20px;
+            color: #333;
+        }
+
+        #progress {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .paw {
+            font-size: 24px;
+            color: #ccc;
+            transition: color 0.3s;
+        }
+
+        .paw.active {
+            color: #ffd700;
+        }
+
+        .game-content {
+            padding: 10px;
+        }
+
+        #story-text {
+            font-size: 20px;
+            color: #333;
+            margin: 20px 0;
+            line-height: 1.5;
+        }
+
+        #image-container {
+            margin: 20px 0;
+        }
+
+        #scene-image {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 10px;
+            border: 3px solid #ffd700;
+            object-fit: fill;
+        }
+
+        .choices {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .choices button {
+            background-color: #4caf50;
+            color: white;
+            padding: 12px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            min-width: 120px;
+        }
+
+        .choices button:hover {
+            background-color: #388e3c;
+            transform: scale(1.05);
+        }
+
+        .choices button:active {
+            transform: scale(0.95);
+        }
+
+        .navigation-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .navigation-buttons button {
+            background-color: #ffcc00;
+            border: none;
+            padding: 12px 25px;
+            margin: 0 10px;
+            font-family: 'Comic Neue', cursive;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .navigation-buttons button:hover {
+            background-color: #e6b800;
+        }
+
+        @media (max-width: 600px) {
+            .game-container {
+                padding: 4vw;
+                max-width: 90vw;
+            }
+            header h1 {
+                font-size: 6vw;
+            }
+            header p {
+                font-size: 3.5vw;
+            }
+            .progress-bar {
+                font-size: 4vw;
+            }
+            .paw {
+                font-size: 5vw;
+            }
+            #story-text {
+                font-size: 4vw;
+            }
+            #scene-image {
+                max-width: 80vw;
+            }
+            .choices button {
+                font-size: 3.5vw;
+                padding: 2.5vw 4vw;
+                min-width: 40%;
+            }
+            .navigation-buttons button {
+                font-size: 3.5vw;
+                padding: 2.5vw 4vw;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <header>
+        <h1>Help Max Get Home!</h1>
+        <p>A fun game with Max the Puppy</p>
+    </header>
+    <div class="progress-bar">
+        <span>Max's Journey:</span>
+        <div id="progress">
+            <span id="paw1" class="paw">🐾</span>
+            <span id="paw2" class="paw">🐾</span>
+            <span id="paw3" class="paw">🐾</span>
+        </div>
+    </div>
+    <div class="game-content">
+        <div id="story-text">Max is a happy puppy. He runs out to play! What should he do?</div>
+        <div id="image-container">
+            <img id="scene-image" src="max.jpeg" alt="Max">
+        </div>
+        <div id="choices" class="choices">
+            <button onclick="chaseButterflies()">Chase butterflies</button>
+            <button onclick="sniffFlowers()">Sniff flowers</button>
+        </div>
+    </div>
+    <div class="navigation-buttons">
+        <button onclick="window.location.href='TheLostPappyStory.html'">Back to Story</button>
+    </div>
+</div>
+<audio id="barkSound" src="dog-barking-twice-short-and-clear-demo-309887.mp3"></audio>
+<audio id="meowSound" src="cat-meow-195613.mp3"></audio>
+<audio id="cheerSound" src="cheer.mp3"></audio>
+<script>
+    let stage = 1;
+
+    const barkSound = document.getElementById("barkSound");
+    const meowSound = document.getElementById("meowSound");
+    const cheerSound = document.getElementById("cheerSound");
+
+    function updateProgress() {
+        document.getElementById("paw1").classList.remove("active");
+        document.getElementById("paw2").classList.remove("active");
+        document.getElementById("paw3").classList.remove("active");
+        if (stage >= 1) document.getElementById("paw1").classList.add("active");
+        if (stage >= 2) document.getElementById("paw2").classList.add("active");
+        if (stage >= 3) document.getElementById("paw3").classList.add("active");
+    }
+
+    function updateScene(text, imageUrl, choice1Text, choice1Func, choice2Text, choice2Func) {
+        document.getElementById("story-text").innerText = text;
+        document.getElementById("scene-image").src = imageUrl;
+        const choicesDiv = document.getElementById("choices");
+        choicesDiv.innerHTML = `
+            <button onclick="${choice1Func}()">${choice1Text}</button>
+            <button onclick="${choice2Func}()">${choice2Text}</button>
+        `;
+        updateProgress();
+    }
+
+    function chaseButterflies() {
+        if (stage === 1) {
+            stage = 2;
+            updateScene(
+                "Max chases butterflies! He meets a cat named Whiskers. What now?",
+                "max-chasing.jpeg",
+                "Play with Whiskers", "playWithWhiskers",
+                "Keep going", "getLost"
+            );
+        }
+    }
+
+    function sniffFlowers() {
+        if (stage === 1) {
+            stage = 2;
+            updateScene(
+                "Max sniffs flowers. He’s far from home now! He’s scared. What next?",
+                "max-sniffing.jpeg",
+                "Find help", "meetLily",
+                "Run away", "getLost"
+            );
+        }
+    }
+
+    function playWithWhiskers() {
+        meowSound.play();
+        stage = 3;
+        updateScene(
+            "Max plays with Whiskers. A girl named Lily sees him! What should Max do?",
+            "maxAndWhickers.jpg",
+            "Go with Lily", "meetLily",
+            "Stay here", "getLost"
+        );
+    }
+
+    function getLost() {
+        stage = 0;
+        updateScene(
+            "Oh no! Max is lost. He’s sad. Want to try again?",
+            "max-lost.jpeg",
+            "Yes, try again", "restart",
+            "No, stay lost", "stayLost"
+        );
+    }
+
+    function meetLily() {
+        stage = 3;
+        updateScene(
+            "Lily says, 'I’ll help you, Max!' She calls his owner. What happens?",
+            "maxAndLily.jpg",
+            "Go home", "goHome",
+            "Run away", "getLost"
+        );
+    }
+
+    function goHome() {
+        barkSound.play();
+        cheerSound.play();
+        stage = 3;
+        updateScene(
+            "Max’s owner hugs him! He’s home and happy. You did it!",
+            "backHome.jpeg",
+            "Play again", "restart",
+            "Stop", "finish"
+        );
+    }
+
+    function restart() {
+        stage = 1;
+        updateScene(
+            "Max is a happy puppy. He runs out to play! What should he do?",
+            "max.jpeg",
+            "Chase butterflies", "chaseButterflies",
+            "Sniff flowers", "sniffFlowers"
+        );
+    }
+
+    function stayLost() {
+        stage = 0;
+        document.getElementById("story-text").innerText = "Max is still lost. Game over!";
+        document.getElementById("choices").innerHTML = '<button onclick="restart()">Try again</button>';
+        updateProgress();
+    }
+
+    function finish() {
+        stage = 3;
+        document.getElementById("story-text").innerText = "Yay! You helped Max! Good job!";
+        document.getElementById("choices").innerHTML = "";
+        updateProgress();
+    }
+
+    window.onload = function() {
+        updateProgress();
+    };
+</script>
+</body>
+</html>
